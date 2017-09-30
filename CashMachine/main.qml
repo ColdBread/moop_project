@@ -1,0 +1,36 @@
+import QtQuick 2.7
+import QtQuick.Controls 2.0
+import QtQuick.Layouts 1.3
+
+ApplicationWindow {
+    visible: true
+    width: 1280
+    height: 780
+    title: qsTr("Hello World")
+
+    SwipeView {
+        id: swipeView
+        anchors.fill: parent
+        currentIndex: swipeView.currentIndex
+        interactive: false
+
+        Page1 {
+        }
+        LoginPage {
+
+        }
+
+
+
+    }
+
+    footer: TabBar {
+        id: tabBar
+        currentIndex: swipeView.currentIndex
+        TabButton {
+            text: qsTr("CashMachine")
+            enabled: false
+        }
+
+    }
+}
