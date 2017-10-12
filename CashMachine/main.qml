@@ -19,6 +19,12 @@ ApplicationWindow {
         LoginPage {
 
         }
+        Verification{
+
+        }
+        MainUserPage{
+
+        }
 
 
 
@@ -28,7 +34,7 @@ ApplicationWindow {
         id: tabBar
         currentIndex: swipeView.currentIndex
         TabButton {
-            text: qsTr("CashMachine")
+            text: qsTr("E-Banking")
             enabled: false
         }
 

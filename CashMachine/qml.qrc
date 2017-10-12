@@ -6,5 +6,11 @@
         <file>qtquickcontrols2.conf</file>
         <file>LoginPage.qml</file>
         <file>LoginPageForm.ui.qml</file>
+        <file>Verification.qml</file>
+        <file>VerificationForm.ui.qml</file>
+        <file>Background.qml</file>
+        <file>BackgroundForm.ui.qml</file>
+        <file>MainUserPage.qml</file>
+        <file>MainUserPageForm.ui.qml</file>
     </qresource>
 </RCC>

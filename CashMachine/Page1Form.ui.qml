@@ -11,6 +11,11 @@ Item {
     z: 0
     property alias item1: item1
 
+    Background {
+        id: background
+        anchors.fill: parent
+    }
+
     ColumnLayout {
         id: columnLayout
         x: 590
@@ -28,11 +33,5 @@ Item {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignBaseline
             z: 2
         }
-    }
-
-    Rectangle {
-        id: rectangle
-        color: "#009688"
-        anchors.fill: parent
     }
 }
