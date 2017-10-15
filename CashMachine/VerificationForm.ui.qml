@@ -43,6 +43,9 @@ Item {
             Layout.preferredHeight: 43
             Layout.preferredWidth: 179
             font.pointSize: 18
+            validator: RegExpValidator {
+                regExp: /^[0-9]{11}$/
+            }
         }
 
         Button {

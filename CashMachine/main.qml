@@ -7,12 +7,15 @@ ApplicationWindow {
     width: 1280
     height: 780
     title: qsTr("Hello World")
+    property variant globalPhone: "";
+    property variant globalToken: "";
 
     SwipeView {
         id: swipeView
         anchors.fill: parent
         currentIndex: swipeView.currentIndex
         interactive: false
+
 
         Page1 {
         }

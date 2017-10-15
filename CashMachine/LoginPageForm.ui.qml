@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.3
 Item {
     width: 1280
     height: 780
+    property alias passwordLabel: passwordLabel
+    property alias phoneNumberLabel: phoneNumberLabel
     property alias phoneField: phoneField
     property alias passwordField: passwordField
     property alias loginButton: loginButton
@@ -78,6 +80,7 @@ Item {
                 x: 58
                 y: 117
                 text: qsTr("Password")
+                wrapMode: Text.WordWrap
                 font.bold: false
                 font.pointSize: 12
             }
