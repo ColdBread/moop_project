@@ -11,9 +11,9 @@ Item {
     Background {
         id: background
         anchors.rightMargin: 0
-        anchors.bottomMargin: 30
+        anchors.bottomMargin: 0
         anchors.leftMargin: 0
-        anchors.topMargin: -30
+        anchors.topMargin: 0
         anchors.fill: parent
 
         Label {

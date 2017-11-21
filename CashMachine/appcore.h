@@ -20,6 +20,7 @@ signals:
     void sendTooManyReqLogin();
     void sendVerification();
     void sendVerificationBad();
+    void sendAccounts();
 
 
 public slots:
@@ -27,6 +28,7 @@ public slots:
     void receiveGetStarted();
     void receiveLogin(QString phone, QString pass);
     void receiveVerification(QString code);
+    void receiveAccounts();
 
 private:
    // int count;
