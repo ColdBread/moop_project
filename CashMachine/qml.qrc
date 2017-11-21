@@ -12,5 +12,7 @@
         <file>BackgroundForm.ui.qml</file>
         <file>MainUserPage.qml</file>
         <file>MainUserPageForm.ui.qml</file>
+        <file>Transactions.qml</file>
+        <file>TransactionsForm.ui.qml</file>
     </qresource>
 </RCC>

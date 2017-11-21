@@ -28,6 +28,9 @@ ApplicationWindow {
         MainUserPage{
 
         }
+        Transactions{
+
+        }
 
 
 

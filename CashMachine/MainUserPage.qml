@@ -7,4 +7,9 @@ MainUserPageForm {
         swipeView.currentIndex = 1
     }
 
+    button1.onClicked: {
+        console.log("Button Pressed Transactions");
+        swipeView.currentIndex = 4;
+    }
+
 }

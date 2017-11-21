@@ -2,13 +2,33 @@ import QtQuick 2.4
 
 LoginPageForm {
 
+    Connections {
+            target: appCore // Указываем целевое соединение
+            /* Объявляем и реализуем функцию, как параметр
+             * объекта и с имененем похожим на название сигнала
+             * Разница в том, что добавляем в начале on и далее пишем
+             * с заглавной буквы
+             * */
+            onSendLogin: {
+                swipeView.currentIndex = 2
+            }
+            onSendTooManyReqLogin: {
+
+            }
+
+        }
+
 
     loginButton.onClicked: {
         console.log("Button Pressed Login");
         if(checkInputs (phoneField.text, passwordField.text)) {
             //makeRequest(phoneField.text,passwordField.text);
-            swipeView.currentIndex = 2;
+            appCore.receiveLogin(phoneField.text, passwordField.text)
+            vipeInput(phoneField);
+            vipeInput(passwordField);
+            //swipeView.currentIndex = 2;
         }
+
 
 
     }
@@ -46,11 +66,11 @@ LoginPageForm {
             }
 
             function changePasswordLabel() {
-                passwordLabel.text = "Password (Requires at least 1 letter and 1 number)";
+                passwordLabel.text = "Password (At least 1 letter and 1 number)";
                 passwordLabel.color = "#FF0000";
             }
 
-        function makeRequest(phone,password) {
+        /*function makeRequest(phone,password) {
             var request = new XMLHttpRequest();
             var url = '/auth/send-sms?phone='+phone+'&password='+password;
             request.open('GET',url);
@@ -74,7 +94,7 @@ LoginPageForm {
                 }
             }
             request.send();
-        }
+        }*/
         function vipeInput(input){
             input.text = "";
 
