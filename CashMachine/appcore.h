@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include "session.h"
 
 class AppCore : public QObject
 {
@@ -17,16 +18,24 @@ signals:
     void sendGetStarted();
     void sendLogin();
     void sendTooManyReqLogin();
+    void sendVerification();
+    void sendVerificationBad();
 
 
 public slots:
     // Слот для приёма данных из qml-интерфейса
     void receiveGetStarted();
     void receiveLogin(QString phone, QString pass);
-    void replyFinished(QNetworkReply *resp);
+    void receiveVerification(QString code);
 
 private:
    // int count;
+    QNetworkAccessManager *manager;
+    Session *session;
+
+private slots:
+    void replyFinishedLogin(QNetworkReply* reply);
+    void replyFinishedVerification(QNetworkReply* reply);
 };
 
 

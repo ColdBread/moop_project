@@ -44,7 +44,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 12
                 validator: RegExpValidator {
-                    regExp: /^\+[0-9]{11}$/
+                    regExp: /^\+[0-9]{12}$/
                 }
             }
 

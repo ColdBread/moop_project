@@ -10,6 +10,8 @@ LoginPageForm {
              * с заглавной буквы
              * */
             onSendLogin: {
+                vipeInput(phoneField)
+                vipeInput(passwordField)
                 swipeView.currentIndex = 2
             }
             onSendTooManyReqLogin: {
@@ -22,11 +24,10 @@ LoginPageForm {
     loginButton.onClicked: {
         console.log("Button Pressed Login");
         if(checkInputs (phoneField.text, passwordField.text)) {
-            //makeRequest(phoneField.text,passwordField.text);
+
             appCore.receiveLogin(phoneField.text, passwordField.text)
-            vipeInput(phoneField);
-            vipeInput(passwordField);
-            //swipeView.currentIndex = 2;
+
+
         }
 
 
@@ -51,7 +52,7 @@ LoginPageForm {
 
 
             function checkPhone(phone) {
-                var phoneRegExp = /^\+[0-9]{11}$/;
+                var phoneRegExp = /^\+[0-9]{12}$/;
                 return (phone.length > 6 && phoneRegExp.test(phone));
             }
 

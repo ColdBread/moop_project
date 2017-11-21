@@ -20,5 +20,5 @@ void Currency:: normalize() {
 }
 
 /*Currency:: ~Currency() {
-    delete this->value;
+    delete value;
 }*/

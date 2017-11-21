@@ -2,6 +2,11 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QEventLoop>
+#include "session.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 
 AppCore::AppCore(QObject *parent) : QObject(parent)
@@ -16,40 +21,107 @@ void AppCore::receiveGetStarted()
 
 void AppCore::receiveLogin(QString phone, QString pass)
 {
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    manager = new QNetworkAccessManager(this);
 
-    //QString url = "/auth/send-sms?phone="+phone+"&password="+pass;
-    QString url = "http::/bigmir.net";
-    QNetworkRequest request;
-    request.setUrl(url);
+    QString url = "http://18.216.40.33:8888/auth/send-sms?phone="+phone+"&password="+pass;
+    //QString url = "http://18.216.40.33:8888/auth/send-sms?phone=+380504404809&password=zzzz1234";
+
+    qDebug() << url;
+    QNetworkRequest request(url);
     QNetworkReply* reply = manager->get(request);
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    session = new Session(0, phone);
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedLogin(QNetworkReply*)),Qt::DirectConnection);
+
+    qDebug() << ok;
 }
 
-void AppCore::replyFinished(QNetworkReply *resp){
-    QVariant status_code = resp->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    if(!status_code.isValid()){
+void AppCore::replyFinishedLogin(QNetworkReply* reply){
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+    qDebug() << status;
+
         // Print or catch the status code
-        qint32 status = status_code.toInt();
-        qDebug() << status;
         if(status== 200) {
-            qDebug() << resp->readAll();
+            qDebug() << reply->readAll();
+            qDebug() << session->getPhone();
+            reply->deleteLater();
+            reply = nullptr;
             emit sendLogin();
         } else if (status == 429) {
             qDebug() << "Too many requests" + status;
+            QByteArray bytes = reply->readAll();
+            QString str = QString::fromUtf8(bytes.data(), bytes.size());
+            qDebug() << str;
+            QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
+            qDebug() << body;
+            QJsonObject data = body.object();
+            qDebug() << data["timeoutMinutes"].isDouble();
+            double token = data["timeoutMinutes"].toDouble();
+            qDebug() << token;
             //read http body please
+            reply->deleteLater();
+            reply = nullptr;
             emit sendTooManyReqLogin();
         } else if (status == 400) {
             qDebug() << "Bad Request"+status;
+            reply->deleteLater();
+            reply = nullptr;
         } else {
             qDebug() << "HTTP request failed"+status;
+            reply->deleteLater();
+            reply = nullptr;
         }
-    }
+
+   // qDebug() << "UHUUUU";
     //comment last line in publish
-    emit sendLogin();
+    //emit sendLogin();
 }
 
+void AppCore::receiveVerification(QString code) {
+    QString url = "http://18.216.40.33:8888/auth/verify-sms?phone="+session->getPhone()+"&code="+code;
+    qDebug() << url;
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = manager->get(request);
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedVerification(QNetworkReply*)), Qt::DirectConnection);
+    qDebug() << ok;
 
+}
+
+void AppCore:: replyFinishedVerification(QNetworkReply* reply){
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+    qDebug() << status;
+    if(status == 200) {
+        QByteArray bytes = reply->readAll();
+        qDebug() << bytes;
+        //qDebug() << strReply;
+        //qDebug() <<"http body: " << reply->readAll();
+        QString str = QString::fromUtf8(bytes.data(), bytes.size());
+        qDebug() << str;
+        QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
+        qDebug() << body;
+        QJsonObject data = body.object();
+        QString token = data["token"].toString();
+        qDebug() <<"token: " << token;
+        session->setToken(token);
+        reply->deleteLater();
+        reply = nullptr;
+        emit sendVerification();
+    } else if(status == 401) {
+        qDebug() << "U SHall NOT PASS !-|-!";
+        delete session;
+        reply->deleteLater();
+        reply = nullptr;
+        emit sendVerificationBad();
+    } else {
+        qDebug() << "HTTP request failed" << status;
+        delete session;
+        reply->deleteLater();
+        reply = nullptr;
+        emit sendVerificationBad();
+    }
+}
 
 
 

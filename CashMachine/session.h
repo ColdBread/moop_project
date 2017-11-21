@@ -7,7 +7,10 @@ class Session : public QObject
 {
     Q_OBJECT
 public:
-    explicit Session (QObject *parent = 0, QString phone = "+380");
+    explicit Session (QObject *parent = 0, QString phone = "+380000000000");
+    void setToken(QString &token);
+    QString& getToken();
+    QString& getPhone();
 
 
 private:

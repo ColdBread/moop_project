@@ -1,5 +1,4 @@
 import QtQuick 2.4
-import QtQuick.Controls.Material 2.0
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 
@@ -44,7 +43,7 @@ Item {
             Layout.preferredWidth: 179
             font.pointSize: 18
             validator: RegExpValidator {
-                regExp: /^[0-9]{11}$/
+                regExp: /^[A-Za-z0-9]{11}$/
             }
         }
 
