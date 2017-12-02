@@ -29,6 +29,7 @@ public slots:
     void receiveLogin(QString phone, QString pass);
     void receiveVerification(QString code);
     void receiveAccounts();
+    void tests();
 
 private:
    // int count;
@@ -38,6 +39,7 @@ private:
 private slots:
     void replyFinishedLogin(QNetworkReply* reply);
     void replyFinishedVerification(QNetworkReply* reply);
+    void replyFinishedAccounts(QNetworkReply* reply);
 };
 
 

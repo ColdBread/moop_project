@@ -6,7 +6,7 @@ MainUserPageForm {
 
     }
     Component.onCompleted: {
-        appCore.receiveAccounts();
+        //appCore.receiveAccounts();
     }
 
     quitButton.onClicked: {

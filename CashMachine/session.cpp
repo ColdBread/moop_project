@@ -2,10 +2,10 @@
 
 Session::Session(QObject *parent, QString phone): QObject(parent), _phone(phone)
 {
-
+    _token =  "rofl blyat";
 }
 
-void Session::setToken(QString &token){
+void Session::setToken(QString token){
     _token = token;
 }
 

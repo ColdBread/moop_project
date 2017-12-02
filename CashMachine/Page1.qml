@@ -13,6 +13,10 @@ Page1Form {
 
             }
         }
+    Component.onCompleted: {
+        appCore.tests();
+        //appCore.receiveAccounts();
+    }
     getStarted.onClicked: {
         console.log("Button Pressed getStarted");
         appCore.receiveGetStarted()

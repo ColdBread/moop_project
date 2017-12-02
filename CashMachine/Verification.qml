@@ -5,12 +5,13 @@ VerificationForm {
         target: appCore
 
         onSendVerification: {
+            appCore.receiveAccounts();
+        }
 
+        onSendAccounts: {
             vipeInput(verificationPassword);
             swipeView.currentIndex = 3;
         }
-
-
 
         onSendVerificationBad: {
             vipeInput(verificationPassword);
