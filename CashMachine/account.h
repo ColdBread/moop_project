@@ -8,14 +8,15 @@ class Account: public QObject
 {
     Q_OBJECT
 public:
-    explicit Account(QObject *parent=0, QString name="account");
-    QString getName();
-    QString getAmount();
-    QString getCredit();
+    explicit Account(QObject *parent=0,int id = 0, double amount = 0, double limit = 0);
+    Account(const Account& acc);
+    double getAmount();
+    double getCredit();
+    int getId();
+    Account& operator=(const Account& acc);
 private:
     int _id;
-    QString _name;
-    Currency _amount;
-    Currency _credit_limit;
+    double _amount;
+    double _credit_limit;
 };
 #endif // ACCOUNT_H

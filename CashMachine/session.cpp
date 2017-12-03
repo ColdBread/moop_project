@@ -2,7 +2,8 @@
 
 Session::Session(QObject *parent, QString phone): QObject(parent), _phone(phone)
 {
-    _token =  "rofl blyat";
+    _token =  "rofl";
+    _accounts = new QList<Account>();
 }
 
 void Session::setToken(QString token){
@@ -16,4 +17,8 @@ QString& Session::getToken()
 
 QString& Session::getPhone(){
     return _phone;
+}
+
+void Session::addAccount(Account acc){
+    _accounts->append(acc);
 }

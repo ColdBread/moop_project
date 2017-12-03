@@ -11,12 +11,13 @@ public:
     void setToken(QString token);
     QString& getToken();
     QString& getPhone();
+    void addAccount(Account acc);
 
 
 private:
     QString _token;
     QString _phone;
-    QList<Account> _accounts;
+    QList<Account>* _accounts;
 
 };
 #endif // SESSION_H

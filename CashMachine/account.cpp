@@ -1,23 +1,37 @@
 #include <account.h>
 
-Account:: Account(QObject *parent, QString name): QObject(parent), _name(name)
+Account:: Account(QObject *parent, int id, double amount, double limit):
+    QObject(parent), _id(id), _amount(amount), _credit_limit(limit)
 {
 
 }
 
-QString Account:: getName()
+Account :: Account(const Account& acc):
+    QObject(acc.parent()),_id(acc._id), _amount(acc._amount), _credit_limit(acc._credit_limit)
 {
-    return this->_name;
+
 }
 
-QString Account:: getAmount()
-{
-    QString res = "";
-    return res+this->_amount.getValue(); //QString(this->_amount.getValue());
+Account& Account::operator=(const Account& acc){
+    this->_id = acc._id;
+    this->_amount = acc._amount;
+    this->_credit_limit = acc._credit_limit;
+
 }
 
-QString Account:: getCredit()
+
+double Account:: getAmount()
 {
-    QString res = "";
-    return res+this->_credit_limit.getValue();
+
+    return _amount;
+}
+
+double Account:: getCredit()
+{
+
+    return _credit_limit;
+}
+
+int Account:: getId() {
+    return _id;
 }

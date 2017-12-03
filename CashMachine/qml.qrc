@@ -14,5 +14,7 @@
         <file>MainUserPageForm.ui.qml</file>
         <file>Transactions.qml</file>
         <file>TransactionsForm.ui.qml</file>
+        <file>EditAccount.qml</file>
+        <file>EditAccountForm.ui.qml</file>
     </qresource>
 </RCC>

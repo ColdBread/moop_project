@@ -4,6 +4,7 @@
 #include <QNetworkRequest>
 #include <QEventLoop>
 #include "session.h"
+#include "account.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -21,18 +22,16 @@ void AppCore::receiveGetStarted()
 
 void AppCore::tests()
 {
-    QJsonObject json [
-    {
-        "id" : 3,
-        "amount" : 20.00,
-        "creditLimit" : 0.00
-    },{
-        "id": 4,
-        "amount" : -20.00,
-        "creditLimit" : 60.00
-    }
-            ]
-    ;
+    QJsonArray json;
+    QJsonObject lol1  {{"id" , 3},{"amount" , 20.00},{"creditLimit" , 0.00}};
+    QJsonObject lol2  {{"id", 4},{"amount" , -20.00},{"creditLimit" , 60.00}};
+    json.push_back(QJsonValue(lol1));
+    json.push_back(QJsonValue(lol2));
+
+    qDebug() << json;
+
+    qDebug() <<json[0].toObject();
+
 }
 
 void AppCore::receiveLogin(QString phone, QString pass)
@@ -129,13 +128,13 @@ void AppCore:: replyFinishedVerification(QNetworkReply* reply){
         emit sendVerification();
     } else if(status == 401) {
         qDebug() << "U SHall NOT PASS !-|-!";
-        //delete session;
+        delete session;
         reply->deleteLater();
 
         emit sendVerificationBad();
     } else {
         qDebug() << "HTTP request failed" << status;
-        //delete session;
+        delete session;
         reply->deleteLater();
 
         emit sendVerificationBad();
@@ -167,14 +166,32 @@ void AppCore::replyFinishedAccounts(QNetworkReply *reply)
         QString str = QString::fromUtf8(bytes.data(), bytes.size());
 
         QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
-
-        QJsonObject data = body.object();
-        qDebug() << data["id"].isArray();
-        if(data["id"].isArray()){
+        QJsonArray data = body.array();
+        //QJsonObject data = body.object();
+        //qDebug() << data.size();
+        /*qDebug() << "info about last acc";
+        qDebug() << "id: ";
+        qDebug() << data[data.size()-1].toObject()["id"].toInt();
+        qDebug() << "amount: ";
+        qDebug() << data[data.size()-1].toObject()["amount"].toDouble();
+        qDebug() << "credit limit: ";
+        qDebug() << data[data.size()-1].toObject()["credit limit"].toDouble();
+        qDebug() << "name ";
+        qDebug() <<  data[data.size()-1].toObject()["id"].toString();*/
+        //if(data["id"].isArray()){
 
             //QVariantList kekos = data["id"].toArray().toVariantList();
             //qDebug() << kekos;
+        //}
+        for(QJsonValue val : data) {
+            int id = val.toObject()["id"].toInt();
+            double amount = val.toObject()["amount"].toDouble();
+            double limit = val.toObject()["credit_limit"].toDouble();
+            Account acc(0,id,amount,limit);
+            session->addAccount(acc);
+            emit sendMainUpdateAccInfo(id, amount, limit);
         }
+        emit sendAccounts();
         reply->deleteLater();
 
     } else if(status == 401) {
@@ -183,6 +200,29 @@ void AppCore::replyFinishedAccounts(QNetworkReply *reply)
         reply->deleteLater();
         qDebug() << "HTTP request failed";
     }
+}
+
+void AppCore::receiveEditAccounts() {
+    emit sendEditRefreshAccInfo();
+    for(Account acc : session->_accounts){
+        emit sendEditUpdateAccInfo(acc._id, acc._amount, acc._credit_limit);
+    }
+}
+
+void AppCore::receiveAddAcc(){
+    manager = new QNetworkAccessManager(this);
+    QString token = session->getToken();
+    QString url = "http://18.216.40.33:8888/accounts?token="+token;
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = manager->put(request);
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedAccounts(QNetworkReply*)), Qt::DirectConnection);
+    qDebug() << ok;
+}
+
+
+void AppCore::receiveEndSession() {
+    delete session;
 }
 
 

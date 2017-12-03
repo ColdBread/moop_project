@@ -5,9 +5,19 @@ import QtQuick.Layouts 1.0
 Item {
     width: 1280
     height: 780
-    property alias button1: button1
+    property alias transactions: transactions
+    property alias editAcc: editAcc
+    property alias history: history
+    property alias manageAuto: manageAuto
+
+    //property alias item1: item1
+    //property alias button3: button3
+    property alias listView1: listView1
+    property alias listModel: listModel
+    property alias pane: pane
     property alias quitButton: quitButton
 
+    //property alias labeL: button3.lAbel
     Background {
         id: background
         anchors.rightMargin: 0
@@ -35,32 +45,21 @@ Item {
             x: 1125
             y: 647
             text: qsTr("Quit")
-            anchors.right: parent.right
-            anchors.rightMargin: 91
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 85
+            anchors.verticalCenterOffset: 213
+            anchors.horizontalCenterOffset: 440
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             autoExclusive: false
             highlighted: true
         }
 
-        Label {
-            id: label1
-            x: 541
-            y: 210
-            width: 198
-            height: 51
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 18
-        }
-
         Button {
-            id: button
+            id: editAcc
             y: 366
             text: qsTr("Edit My Accounts")
-            anchors.left: parent.left
-            anchors.leftMargin: 182
+            anchors.horizontalCenterOffset: -367
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenterOffset: 0
             anchors.verticalCenter: parent.verticalCenter
             autoExclusive: false
@@ -68,24 +67,24 @@ Item {
         }
 
         Button {
-            id: button1
+            id: transactions
             x: 606
-            y: 647
+            y: 207
             text: qsTr("Transactions")
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 85
+            anchors.verticalCenterOffset: -163
+            anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             highlighted: true
         }
 
         Button {
-            id: button2
+            id: history
             x: 1024
             y: 366
             text: qsTr("History")
-            anchors.right: parent.right
-            anchors.rightMargin: 183
+            anchors.horizontalCenterOffset: 436
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenterOffset: 0
             anchors.verticalCenter: parent.verticalCenter
             highlighted: true
@@ -97,12 +96,14 @@ Item {
             y: 290
             width: 324
             height: 177
+            bottomPadding: 30
+            topPadding: 30
             anchors.verticalCenterOffset: 1
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
-            Button {
+            /*Button {
                 id: button3
                 anchors.right: parent.right
                 anchors.left: parent.left
@@ -137,87 +138,80 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 5
                 }
-            }
-
-            Button {
-                id: button4
-                y: 54
-                height: 48
-                anchors.right: parent.right
-                anchors.rightMargin: 0
+            }*/
+            ListView {
+                id: listView1
+                // Размещаем его в оставшейся части окна приложения
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 0
-
-                Label {
-                    id: label5
-                    x: 264
-                    y: 16
-                    text: qsTr("120.00")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                }
-
-                Label {
-                    id: label6
-                    y: 17
-                    text: qsTr("Account 2")
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.bottom: parent.bottom
-                    font.pointSize: 14
-                    anchors.bottomMargin: 8
-                }
-
-                Label {
-                    id: label7
-                    text: qsTr("*2289")
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.leftMargin: 90
-                    anchors.topMargin: 5
-                }
-            }
-
-            Button {
-                id: button5
-                y: 108
-                height: 48
                 anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
 
-                Label {
-                    id: label8
-                    x: 264
-                    y: 16
-                    text: qsTr("-40.20")
-                    anchors.verticalCenter: parent.verticalCenter
+                /* в данном свойстве задаём вёрстку одного объекта
+                     * который будем отображать в списке в качестве одного элемента списка
+                     * */
+                delegate: Item {
+                    id: item1
+
+                    anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    height: 40
+
+                    // В данном элементе будет находиться одна кнопка
+                    Button {
+                        id: button3
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        Label {
+                            id: lAbel
+                            y: 17
+                            text: accId
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 8
+                            anchors.left: parent.left
+                            anchors.leftMargin: 0
+                            font.pointSize: 14
+                        }
+
+                        Label {
+                            id: label2
+                            x: 264
+                            y: 16
+                            text: accAmount
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                        }
+
+                        /*Label {
+                            id: label4
+                            text: qsTr("*2288")
+                            anchors.left: parent.left
+                            anchors.leftMargin: 90
+                            anchors.top: parent.top
+                            anchors.topMargin: 5
+                        }*/
+                    }
                 }
 
-                Label {
-                    id: label9
-                    y: 17
-                    text: qsTr("Account 3")
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    anchors.bottom: parent.bottom
-                    font.pointSize: 14
-                    anchors.bottomMargin: 8
-                }
-
-                Label {
-                    id: label10
-                    text: qsTr("*2290")
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.leftMargin: 90
-                    anchors.topMargin: 5
+                // Сама модель, в которой будут содержаться все элементы
+                model: ListModel {
+                    id: listModel // задаём ей id для обращения
                 }
             }
+        }
+
+        Button {
+            id: manageAuto
+            x: 606
+            y: 566
+            text: qsTr("Manage Auto Transactions")
+            highlighted: true
+            anchors.verticalCenterOffset: 213
+            anchors.horizontalCenterOffset: 0
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 }

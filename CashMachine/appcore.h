@@ -21,7 +21,10 @@ signals:
     void sendVerification();
     void sendVerificationBad();
     void sendAccounts();
-
+    void sendMainUpdateAccInfo(int id, double amount, double limit);
+    void sendMainRefreshAccInfo();
+    void sendEditRefreshAccInfo();
+    void sendEditUpdateAccInfo(int id, double amount, double limit);
 
 public slots:
     // Слот для приёма данных из qml-интерфейса
@@ -29,6 +32,9 @@ public slots:
     void receiveLogin(QString phone, QString pass);
     void receiveVerification(QString code);
     void receiveAccounts();
+    void receiveEndSession();
+    void receiveEditAccounts();
+    void receiveAddAcc();
     void tests();
 
 private:
