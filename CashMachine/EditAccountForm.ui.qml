@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.0
 Item {
     width: 1280
     height: 780
+    property alias addButton: addButton
+    property alias backAccButton: backAccButton
 
     Background {
         id: background
@@ -21,7 +23,7 @@ Item {
         }
 
         Button {
-            id: button
+            id: addButton
             x: 590
             y: 570
             text: qsTr("Add New Account ")

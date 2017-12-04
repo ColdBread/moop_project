@@ -14,7 +14,7 @@ Page1Form {
             }
         }
     Component.onCompleted: {
-        appCore.tests();
+        //appCore.tests();
         //appCore.receiveAccounts();
     }
     getStarted.onClicked: {

@@ -31,6 +31,9 @@ ApplicationWindow {
         Transactions{
 
         }
+        EditAccount{
+
+        }
 
 
 

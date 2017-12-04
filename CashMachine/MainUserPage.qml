@@ -13,49 +13,18 @@ MainUserPageForm {
             listModel.clear();
         }
     }
-
-
-    quitButton.onClicked: {
-        console.log("Button Pressed Quit");
-        appCore.receiveEndSession();
-        swipeView.currentIndex = 1
-    }
-    editAcc.onClicked: {
-        appCore.receiveEditAccounts();
-        swipeView.currentIndex = 5;
-    }
-
-    history.onClicked: {
-        swipeView.currentIndex = 6;
-    }
-
-    manageAuto.onClicked: {
-        swipeView.currentIndex = 8;
-    }
-
-
-
-    transactions.onClicked: {
-        console.log("Button Pressed Transactions");
-        swipeView.currentIndex = 4;
-    }
-
-
-
     Item {
         width: 1280
         height: 780
-        //property alias transactions: transactions
-        //property alias editAcc: editAcc
-        //property alias history: history
-        //property alias manageAuto: manageAuto
+        property alias transactions: transactions
+        property alias editAcc: editAcc
 
         //property alias item1: item1
         //property alias button3: button3
         //property alias listView1: listView1
         //property alias listModel: listModel
         //property alias pane: pane
-        //property alias quitButton: quitButton
+        property alias quitButton: quitButton
 
         //property alias labeL: button3.lAbel
         Background {
@@ -92,6 +61,11 @@ MainUserPageForm {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 autoExclusive: false
                 highlighted: true
+                onClicked: {
+                        console.log("Button Pressed Quit");
+                        appCore.receiveEndSession();
+                        swipeView.currentIndex = 1
+                    }
             }
 
             Button {
@@ -104,6 +78,10 @@ MainUserPageForm {
                 anchors.verticalCenter: parent.verticalCenter
                 autoExclusive: false
                 highlighted: true
+                onClicked: {
+                        appCore.receiveEditAccounts();
+                        swipeView.currentIndex = 5;
+                    }
             }
 
             Button {
@@ -116,19 +94,15 @@ MainUserPageForm {
                 anchors.horizontalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 highlighted: true
+                onClicked: {
+                        console.log("Button Pressed Transactions");
+                        appCore.receiveUpdateCombo();
+                        swipeView.currentIndex = 4;
+                    }
+
             }
 
-            Button {
-                id: history
-                x: 1024
-                y: 366
-                text: qsTr("History")
-                anchors.horizontalCenterOffset: 436
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenterOffset: 0
-                anchors.verticalCenter: parent.verticalCenter
-                highlighted: true
-            }
+
 
             Pane {
                 id: pane
@@ -136,8 +110,8 @@ MainUserPageForm {
                 y: 290
                 width: 324
                 height: 177
-                bottomPadding: 30
-                topPadding: 30
+                bottomPadding: 40
+                topPadding: 40
                 anchors.verticalCenterOffset: 1
                 anchors.horizontalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -203,17 +177,7 @@ MainUserPageForm {
                 }
             }
 
-            Button {
-                id: manageAuto
-                x: 606
-                y: 566
-                text: qsTr("Manage Auto Transactions")
-                highlighted: true
-                anchors.verticalCenterOffset: 213
-                anchors.horizontalCenterOffset: 0
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
+
         }
     }
 

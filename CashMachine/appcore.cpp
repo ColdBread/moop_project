@@ -183,10 +183,12 @@ void AppCore::replyFinishedAccounts(QNetworkReply *reply)
             //QVariantList kekos = data["id"].toArray().toVariantList();
             //qDebug() << kekos;
         //}
+        emit sendMainRefreshAccInfo();
         for(QJsonValue val : data) {
             int id = val.toObject()["id"].toInt();
             double amount = val.toObject()["amount"].toDouble();
-            double limit = val.toObject()["credit_limit"].toDouble();
+            double limit = val.toObject()["creditLimit"].toDouble();
+            qDebug() << limit;
             Account acc(0,id,amount,limit);
             session->addAccount(acc);
             emit sendMainUpdateAccInfo(id, amount, limit);
@@ -204,8 +206,10 @@ void AppCore::replyFinishedAccounts(QNetworkReply *reply)
 
 void AppCore::receiveEditAccounts() {
     emit sendEditRefreshAccInfo();
-    for(Account acc : session->_accounts){
-        emit sendEditUpdateAccInfo(acc._id, acc._amount, acc._credit_limit);
+    QList<Account> accs = *session->getAccounts();
+    for(Account acc : accs){
+        qDebug() << acc.getCredit();
+        emit sendEditUpdateAccInfo(acc.getId(), acc.getAmount(), acc.getCredit());
     }
 }
 
@@ -215,13 +219,143 @@ void AppCore::receiveAddAcc(){
     QString url = "http://18.216.40.33:8888/accounts?token="+token;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QNetworkReply* reply = manager->put(request);
-    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedAccounts(QNetworkReply*)), Qt::DirectConnection);
+    QNetworkReply* reply = manager->sendCustomRequest(request,"PUT");
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedAddAcc(QNetworkReply*)), Qt::DirectConnection);
     qDebug() << ok;
 }
 
+void AppCore::replyFinishedAddAcc(QNetworkReply *reply){
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+
+    if(status == 200) {
+        QByteArray bytes = reply->readAll();
+        QString str = QString::fromUtf8(bytes.data(), bytes.size());
+
+        QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
+        QJsonArray data = body.array();
+        QJsonValue addedValue = data[data.size()-1];
+        QJsonObject addedObj = addedValue.toObject();
+        int id = addedObj["id"].toInt();
+        double amount = addedObj["amount"].toDouble();
+        double limit = addedObj["creditLimit"].toDouble();
+        Account acc(0,id,amount,limit);
+        session->addAccount(acc);
+        emit sendMainUpdateAccInfo(id, amount, limit);
+        emit sendAccounts();
+        reply->deleteLater();
+
+    } else if(status == 401) {
+        reply->deleteLater();
+    } else {
+        reply->deleteLater();
+        qDebug() << "HTTP request failed";
+    }
+}
+
+void AppCore::receiveDeleteAcc(QString id){
+    manager = new QNetworkAccessManager(this);
+    QString token = session->getToken();
+    QString url = "http://18.216.40.33:8888/accounts/"+id +"?token="+token;
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = manager->sendCustomRequest(request,"DELETE");
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedDeleteAcc(QNetworkReply*)), Qt::DirectConnection);
+    qDebug() << ok;
+}
+
+void AppCore::replyFinishedDeleteAcc(QNetworkReply *reply) {
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+
+    if(status == 200) {
+        QByteArray bytes = reply->readAll();
+        QString str = QString::fromUtf8(bytes.data(), bytes.size());
+
+        QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
+        QJsonArray data = body.array();
+        session->clearAccounts();
+        QList<Account> accs = *session->getAccounts();
+
+        emit sendMainRefreshAccInfo();
+        for(QJsonValue val : data) {
+            int id = val.toObject()["id"].toInt();
+            double amount = val.toObject()["amount"].toDouble();
+            double limit = val.toObject()["creditLimit"].toDouble();
+            Account acc(0,id,amount,limit);
+            session->addAccount(acc);
+            emit sendMainUpdateAccInfo(id, amount, limit);
+        }
+        /*QJsonValue addedValue = data[data.size()-1];
+        QJsonObject addedObj = addedValue.toObject();
+        int id = addedObj["id"].toInt();
+        double amount = addedObj["amount"].toDouble();
+        double limit = addedObj["credit_limit"].toDouble();
+        Account acc(0,id,amount,limit);
+        session->addAccount(acc);
+        emit sendMainUpdateAccInfo(id, amount, limit);*/
+
+
+        emit sendAccounts();
+        reply->deleteLater();
+
+    } else if(status == 401) {
+        reply->deleteLater();
+    } else {
+        reply->deleteLater();
+        qDebug() << "HTTP request failed";
+    }
+}
+
+
+void AppCore::receiveUpdateCombo() {
+    emit sendTransRefreshAccInfo();
+    QList<Account> accs = *session->getAccounts();
+    for(Account acc : accs){
+        emit sendTransUpdateAccInfo(acc.getId(), acc.getAmount(), acc.getCredit());
+    }
+}
+
+void AppCore::receiveTrans(QString id_first, QString id_second, QString amount){
+    if(id_first == id_second) {
+        emit sendEqualIDs();
+    }
+    QList<Account> accs = *session->getAccounts();
+    for(Account acc : accs){
+        if(acc.getId() == id_first.toInt()){
+            if(amount.toDouble() > (acc.getAmount() + acc.getCredit())){
+                emit sendNoEnoughMoney();
+            }
+        }
+    }
+    manager = new QNetworkAccessManager(this);
+    QString token = session->getToken();
+    QString url = "http://18.216.40.33:8888/transactions/"+id_first +"/" + id_second +"?amount="+amount +"&token="+token;
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = manager->sendCustomRequest(request,"POST");
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedTrans(QNetworkReply*)), Qt::DirectConnection);
+    qDebug() << ok;
+}
+
+void AppCore::replyFinishedTrans(QNetworkReply *reply){
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+
+    if(status == 200) {
+        emit sendFinishedTransfer();
+        reply->deleteLater();
+
+    } else if(status == 401) {
+        reply->deleteLater();
+    } else {
+        reply->deleteLater();
+        qDebug() << "HTTP request failed";
+    }
+}
 
 void AppCore::receiveEndSession() {
+    emit sendMainRefreshAccInfo();
     delete session;
 }
 

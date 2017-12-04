@@ -12,6 +12,8 @@ public:
     QString& getToken();
     QString& getPhone();
     void addAccount(Account acc);
+    QList<Account>* getAccounts();
+    void clearAccounts();
 
 
 private:

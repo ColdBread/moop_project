@@ -6,12 +6,26 @@ Item {
     id: item1
     width: 1280
     height: 780
+    property alias comboAccs: comboAccs
+    property alias textDestination: textDestination
+    property alias switchRegular: switchRegular
+    property alias textPeriod: textPeriod
     property alias submit: submit
     property alias roundButtonBack: roundButtonBack
 
     Background {
         id: background
         anchors.fill: parent
+
+        Label {
+            id: label2
+            x: 734
+            y: 472
+            width: 42
+            height: 28
+            text: qsTr("Days")
+            font.pointSize: 14
+        }
 
         /* ComboBox {
             id: comboBox
@@ -27,12 +41,13 @@ Item {
     }
 
     ComboBox {
-        id: comboBox
+        id: comboAccs
         x: 504
         width: 272
         height: 48
-        anchors.top: parent.top
-        anchors.topMargin: 262
+        anchors.verticalCenterOffset: -162
+        anchors.horizontalCenterOffset: 0
+        anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
@@ -42,9 +57,9 @@ Item {
         width: 179
         height: 40
         text: qsTr("Choose Your Account")
-        anchors.horizontalCenterOffset: -46
-        anchors.top: parent.top
-        anchors.topMargin: 216
+        anchors.verticalCenterOffset: -230
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenterOffset: 0
         anchors.horizontalCenter: parent.horizontalCenter
         font.pointSize: 14
     }
@@ -56,32 +71,33 @@ Item {
         width: 217
         height: 24
         text: qsTr("Enter Destination Account")
-        anchors.horizontalCenterOffset: -27
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 416
+        anchors.verticalCenterOffset: -90
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenterOffset: 0
         anchors.horizontalCenter: parent.horizontalCenter
         font.pointSize: 14
     }
 
     TextField {
-        id: textField
+        id: textDestination
         x: 504
         y: 370
         width: 272
         height: 40
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 370
+        anchors.verticalCenterOffset: 5
+        anchors.horizontalCenterOffset: 0
+        anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Switch {
-        id: switch1
+        id: switchRegular
         x: 503
         y: 455
-        text: qsTr("Pay Monthly")
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 285
-        anchors.horizontalCenterOffset: -49
+        text: qsTr("Regural")
+        anchors.verticalCenterOffset: 79
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenterOffset: -72
         anchors.horizontalCenter: parent.horizontalCenter
         font.pointSize: 14
     }
@@ -95,6 +111,16 @@ Item {
         anchors.leftMargin: 62
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 65
+    }
+
+    TextField {
+        id: textPeriod
+        x: 668
+        y: 463
+        width: 61
+        height: 43
+        horizontalAlignment: Text.AlignRight
+        enabled: false
     }
 
     Button {
