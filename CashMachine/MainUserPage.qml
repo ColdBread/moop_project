@@ -165,7 +165,9 @@ MainUserPageForm {
 
                             onClicked: {
                                 console.log(label3.text);
-                                swipeView.currentIndex = 7;
+                                appCore.receiveLoadAccSettings(label3.text);
+                                appCore.receiveLoadAccHistory(label3.text);
+                                //swipeView.currentIndex = 6;
                             }
                         }
                     }

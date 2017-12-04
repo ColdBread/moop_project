@@ -23,10 +23,17 @@ TransactionsForm {
         onSendFinishedTransfer: {
             appCore.receiveAccounts();
         }
+        onSendEqualIDs: {
+            label3.text = "You can`t transfer on equal accounts"
+        }
+        onSendNoEnoughMoney: {
+            label3.text = "You don`t have enough money for transfer";
+        }
     }
 
     function clearInputs() {
         switchRegular.checked = false;
+        label3.text = "Transfer";
         vipeInput(textDestination);
         vipeInput(textPeriod);
         vipeInput(textAmount);
@@ -201,7 +208,7 @@ TransactionsForm {
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: {
                 console.log("Button Pressed Submit");
-                switchRegular.checked ? appCore.receiveRegularTrans() : appCore.receiveTrans(listModelTrans.get(comboAccs.currentIndex).idshnik,textDestination.text,textAmount.text);
+                switchRegular.checked ? appCore.receiveRegularTrans(listModelTrans.get(comboAccs.currentIndex).idshnik,textDestination.text,textAmount.text,textPeriod.text) : appCore.receiveTrans(listModelTrans.get(comboAccs.currentIndex).idshnik,textDestination.text,textAmount.text);
                 clearInputs();
                 /*console.log(comboAccs.currentIndex);
                 console.log(listModelTrans.get(comboAccs.currentIndex).idshnik);

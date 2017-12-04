@@ -34,7 +34,9 @@ ApplicationWindow {
         EditAccount{
 
         }
+        AccountSettings{
 
+        }
 
 
     }
