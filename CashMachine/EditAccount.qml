@@ -13,6 +13,14 @@ EditAccountForm {
         onSendEditRefreshAccInfo: {
             listModel.clear();
         }
+        onSendThereIsSomeMoney: {
+            labelSomeMoney.text = "You can`t remove account with amount non equal to 0";
+            labelSomeMoney.color = "#FF0000";
+        }
+    }
+    function vipeInput(input){
+        input.text = "";
+
     }
 
     Item {
@@ -39,6 +47,8 @@ EditAccountForm {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
                         appCore.receiveAddAcc();
+                        vipeInput(labelSomeMoney);
+                        labelSomeMoney.color = "#000000";
                     }
             }
 
@@ -54,8 +64,10 @@ EditAccountForm {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
-                        swipeView.currentIndex = 3;
-                    }
+                    swipeView.currentIndex = 3;
+                    vipeInput(labelSomeMoney);
+                    labelSomeMoney.color = "#000000";
+                }
 
             }
 
@@ -148,6 +160,19 @@ EditAccountForm {
                     }
                 }
 
+            }
+
+            Label {
+                id: labelSomeMoney
+                x: 624
+                y: 196
+                text: qsTr("")
+                anchors.verticalCenterOffset: -175
+                anchors.horizontalCenterOffset: 0
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 14
+                horizontalAlignment: Text.AlignHCenter
             }
 
 

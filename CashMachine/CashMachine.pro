@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     appcore.cpp \
     session.cpp \
     account.cpp \
-    currency.cpp
+    currency.cpp \
+    autotrans.cpp
 
 RESOURCES += qml.qrc
 
@@ -43,4 +44,5 @@ HEADERS += \
     appcore.h \
     session.h \
     account.h \
-    currency.h
+    currency.h \
+    autotrans.h

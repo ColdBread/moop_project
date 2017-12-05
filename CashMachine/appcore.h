@@ -23,6 +23,7 @@ signals:
     void sendAccounts();
     void sendMainUpdateAccInfo(int id, double amount, double limit);
     void sendMainRefreshAccInfo();
+    void sendMainUpdateAccAuto(int id);
     void sendEditRefreshAccInfo();
     void sendEditUpdateAccInfo(int id, double amount, double limit);
     void sendTransUpdateAccInfo(int id, double amount, double limit);
@@ -30,10 +31,16 @@ signals:
     void sendFinishedTransfer();
     void sendEqualIDs();
     void sendNoEnoughMoney();
+    void sendThereIsAlreadyAutoTrans();
     void sendSettingsRefreshAccInfo();
     void sendSettingsUpdateAccInfo(int id, int destination, double amount, QString interval, QString lastPayment);
     void sendSettingsRefreshAccHistory();
     void sendSettingsUpdateAccHistory(int id, int connectedAcc, double amount, QString timeProcc);
+    void sendChangeSuccess();
+    void sendChangeFailure();
+    void sendSetAccId(QString id);
+    void sendThereIsSomeMoney();
+    void sendUnexpectedException();
 
 public slots:
     // Слот для приёма данных из qml-интерфейса
@@ -49,6 +56,9 @@ public slots:
     void receiveTrans(QString id_first, QString id_second, QString amount);
     void receiveRegularTrans(QString id_first, QString id_second, QString amount, QString interval);
     void receiveLoadAccSettings(QString id_acc);
+    void receiveLoadAccHistory(QString id_acc);
+    void receiveDeleteAuto(QString id_trans);
+    void receiveChangeLimit(QString id_acc, QString limit);
     void tests();
 
 private:
@@ -69,6 +79,8 @@ private slots:
     void replyFinishedRegularTrans(QNetworkReply *reply);
     void replyFinishedLoadAccSettings(QNetworkReply *reply);
     void replyFinishedLoadAccHistory(QNetworkReply *reply);
+    void replyFinishedChangeLimit(QNetworkReply * reply);
+    void replyFinishedDeleteAuto(QNetworkReply *reply);
 };
 
 

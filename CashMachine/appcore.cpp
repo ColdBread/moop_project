@@ -193,6 +193,7 @@ void AppCore::replyFinishedAccounts(QNetworkReply *reply)
             Account acc(0,id,amount,limit);
             session->addAccount(acc);
             emit sendMainUpdateAccInfo(id, amount, limit);
+            emit sendMainUpdateAccAuto(id);
         }
         emit sendAccounts();
         reply->deleteLater();
@@ -300,7 +301,8 @@ void AppCore::replyFinishedDeleteAcc(QNetworkReply *reply) {
         emit sendAccounts();
         reply->deleteLater();
 
-    } else if(status == 401) {
+    } else if(status == 400) {
+        emit sendThereIsSomeMoney();
         reply->deleteLater();
     } else {
         reply->deleteLater();
@@ -350,9 +352,8 @@ void AppCore::replyFinishedTrans(QNetworkReply *reply){
         emit sendFinishedTransfer();
         reply->deleteLater();
 
-    } else if(status == 401) {
-        reply->deleteLater();
-    } else {
+    }  else {
+        emit sendUnexpectedException();
         reply->deleteLater();
         qDebug() << "HTTP request failed";
     }
@@ -370,6 +371,19 @@ void AppCore:: receiveRegularTrans(QString id_first, QString id_second, QString 
                 emit sendNoEnoughMoney();
                 return;
             }
+        }
+    }
+    QList<AutoTrans> autos = *session->getAutos();
+    for(AutoTrans trans : autos){
+        qDebug() << trans.getFrom();
+        qDebug() << id_first.toInt();
+        qDebug() << "---------";
+        qDebug() << trans.getTo();
+        qDebug() << id_second.toInt();
+        qDebug() << "----end operation----";
+        if(trans.getFrom() == id_first.toInt() && trans.getTo() == id_second.toInt()){
+            emit sendThereIsAlreadyAutoTrans();
+            return;
         }
     }
     manager = new QNetworkAccessManager(this);
@@ -396,6 +410,7 @@ void AppCore::replyFinishedRegularTrans(QNetworkReply *reply){
     } else if(status == 401) {
         reply->deleteLater();
     } else {
+        emit sendUnexpectedException();
         reply->deleteLater();
         qDebug() << "HTTP request failed";
     }
@@ -411,10 +426,19 @@ void AppCore:: receiveLoadAccSettings(QString id_acc){
     QNetworkReply* reply = manager->sendCustomRequest(request,"GET");
     bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedLoadAccSettings(QNetworkReply*)), Qt::DirectConnection);
     qDebug() << ok;
+    session->clearAutoById(id_acc.toInt());
 }
 
 void AppCore::replyFinishedLoadAccSettings(QNetworkReply *reply){
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    QString idRofl = reply->url().toString();
+    QString res = "";
+    for(int i = 56; i < idRofl.size(); i++){
+        if(!idRofl.at(i).isDigit())
+            break;
+        res.append(idRofl[i]);
+    }
+    qDebug() << res;
     qint32 status = status_code.toInt();
 
     if(status == 200) {
@@ -427,12 +451,20 @@ void AppCore::replyFinishedLoadAccSettings(QNetworkReply *reply){
         for(QJsonValue val : data) {
             int id = val.toObject()["id"].toInt();
             int destination = val.toObject()["destinationAccount"].toInt();
+            qDebug() << "Destination:";
+            qDebug() << destination;
             double amount = val.toObject()["amount"].toDouble();
-            QString interval = val.toObject()["interval"].toString();
-            QString lastPayment = val.toObject()["lastPaymentTime"].toString();
+            qDebug() << val.toObject()["intervalDays"].toDouble();
+            double intervaL = val.toObject()["intervalDays"].toDouble();
+            qDebug() << intervaL;
+            QString interval = QString::number(intervaL);
+            QString lastPay = val.toObject()["timeLastTransaction"].toString();
+            QString lastPayment = lastPay.left(16);
+            AutoTrans trans(0,id,res.toInt(),destination);
+            session->addAutoTrans(trans);
             emit sendSettingsUpdateAccInfo(id, destination, amount, interval, lastPayment);
         }
-
+        emit sendSetAccId(res);
         reply->deleteLater();
         } else if(status == 401) {
             reply->deleteLater();
@@ -469,7 +501,8 @@ void AppCore::replyFinishedLoadAccHistory(QNetworkReply *reply){
             int id = val.toObject()["id"].toInt();
             int connectedAcc = val.toObject()["sourceAccount"].toInt();
             double amount = val.toObject()["amount"].toDouble();
-            QString timeProcc = val.toObject()["timeProcessed"].toString();
+            QString timeProc = val.toObject()["timeProcessed"].toString();
+            QString timeProcc = timeProc.left(16);
             emit sendSettingsUpdateAccHistory(id, connectedAcc, amount, timeProcc);
         }
 
@@ -482,16 +515,84 @@ void AppCore::replyFinishedLoadAccHistory(QNetworkReply *reply){
         }
 }
 
-void AppCore::receiveChangeLimit(QString limit){
+void AppCore::receiveDeleteAuto(QString id_trans){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions?account="+id_acc +"&token="+token;
+    QString url = "http://18.216.40.33:8888/transactions/automatic/"+id_trans +"&token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QNetworkReply* reply = manager->sendCustomRequest(request,"GET");
-    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedLoadAccHistory(QNetworkReply*)), Qt::DirectConnection);
+    QNetworkReply* reply = manager->sendCustomRequest(request,"DELETE");
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedDeleteAuto(QNetworkReply*)), Qt::DirectConnection);
     qDebug() << ok;
+    session->clearAutoById(id_trans.toInt());
+}
+
+void AppCore::replyFinishedDeleteAuto(QNetworkReply *reply){
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+    QString idRofl = reply->url().toString();
+    qDebug() << idRofl;
+    QString res = "";
+    for(int i = 48; i < idRofl.size(); i++){
+        if(!idRofl.at(i).isDigit())
+            break;
+        res.append(idRofl[i]);
+    }
+    qDebug() << res;
+
+    if(status == 200) {
+        QByteArray bytes = reply->readAll();
+        QString str = QString::fromUtf8(bytes.data(), bytes.size());
+
+        QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
+        QJsonArray data = body.array();
+        emit sendSettingsRefreshAccInfo();
+        for(QJsonValue val : data) {
+            int id = val.toObject()["id"].toInt();
+            int destination = val.toObject()["destinationAccount"].toInt();
+            double amount = val.toObject()["amount"].toDouble();
+            QString interval = val.toObject()["intervalDays"].toString();
+            QString lastPay = val.toObject()["timeLastTransaction"].toString();
+            QString lastPayment = lastPay.left(16);
+            AutoTrans trans(0,id,res.toInt(),destination);
+            session->addAutoTrans(trans);
+            emit sendSettingsUpdateAccInfo(id, destination, amount, interval, lastPayment);
+        }
+        emit sendAccounts();
+        reply->deleteLater();
+        } else if(status == 401) {
+            reply->deleteLater();
+        } else {
+            reply->deleteLater();
+            qDebug() << "HTTP request failed";
+        }
+}
+
+void AppCore::receiveChangeLimit(QString id_acc,QString limit){
+    manager = new QNetworkAccessManager(this);
+    QString token = session->getToken();
+    QString url = "http://18.216.40.33:8888/accounts/"+id_acc+"/credit-limit/"+limit +"?token="+token;
+    qDebug() << url;
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = manager->sendCustomRequest(request,"POST");
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedChangeLimit(QNetworkReply*)), Qt::DirectConnection);
+    qDebug() << ok;
+}
+
+void AppCore::replyFinishedChangeLimit(QNetworkReply *reply) {
+    QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    qint32 status = status_code.toInt();
+
+    if(status == 200) {
+        emit sendChangeSuccess();
+        reply->deleteLater();
+    } else {
+        emit sendChangeFailure();
+        reply->deleteLater();
+        qDebug() << "HTTP request failed";
+    }
 }
 
 

@@ -22,18 +22,30 @@ TransactionsForm {
         }
         onSendFinishedTransfer: {
             appCore.receiveAccounts();
+            clearInputs();
         }
         onSendEqualIDs: {
-            label3.text = "You can`t transfer on equal accounts"
+            label3.text = "You can`t transfer on equal accounts";
+            label3.color = "#FF0000";
         }
         onSendNoEnoughMoney: {
             label3.text = "You don`t have enough money for transfer";
+            label3.color = "#FF0000";
+        }
+        onSendThereIsAlreadyAutoTrans: {
+            label3.text = "Auto transaction between this too already created";
+            label3.color = "#FF0000";
+        }
+        onSendUnexpectedException: {
+            label3.text = "Check inputs, probably you have made a mistake";
+            label3.color = "#FF0000";
         }
     }
 
     function clearInputs() {
         switchRegular.checked = false;
         label3.text = "Transfer";
+        label3.color = "#000000";
         vipeInput(textDestination);
         vipeInput(textPeriod);
         vipeInput(textAmount);
@@ -209,7 +221,7 @@ TransactionsForm {
             onClicked: {
                 console.log("Button Pressed Submit");
                 switchRegular.checked ? appCore.receiveRegularTrans(listModelTrans.get(comboAccs.currentIndex).idshnik,textDestination.text,textAmount.text,textPeriod.text) : appCore.receiveTrans(listModelTrans.get(comboAccs.currentIndex).idshnik,textDestination.text,textAmount.text);
-                clearInputs();
+
                 /*console.log(comboAccs.currentIndex);
                 console.log(listModelTrans.get(comboAccs.currentIndex).idshnik);
                 console.log(textAmount.text);

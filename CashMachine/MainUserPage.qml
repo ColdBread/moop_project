@@ -12,6 +12,9 @@ MainUserPageForm {
         onSendMainRefreshAccInfo: {
             listModel.clear();
         }
+        onSendMainUpdateAccAuto: {
+            appCore.receiveLoadAccSettings(id);
+        }
     }
     Item {
         width: 1280
@@ -167,7 +170,7 @@ MainUserPageForm {
                                 console.log(label3.text);
                                 appCore.receiveLoadAccSettings(label3.text);
                                 appCore.receiveLoadAccHistory(label3.text);
-                                //swipeView.currentIndex = 6;
+                                swipeView.currentIndex = 6;
                             }
                         }
                     }
