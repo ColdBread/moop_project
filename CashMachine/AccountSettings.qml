@@ -14,7 +14,10 @@ AccountSettingsForm {
             listModel.clear();
         }*/
         onSendSettingsUpdateAccInfo: {
+            var accId = parseInt(labelId.text);
+            if (destination != accId){
             listModelAuto.append({accId : "Account: " + destination, accAmount: amount, autoLastDate : lastPayment, intervalAuto : interval + " day(s)", transAutoId : id});
+            }
         }
         onSendSettingsRefreshAccInfo: {
             listModelAuto.clear();

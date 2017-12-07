@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 Item {
     width: 1280
     height: 780
+    property alias labelTooManyReq: labelTooManyReq
     property alias passwordLabel: passwordLabel
     property alias phoneNumberLabel: phoneNumberLabel
     property alias phoneField: phoneField
@@ -92,6 +93,19 @@ Item {
                 text: qsTr("Phone Number")
                 font.bold: false
                 font.pointSize: 12
+            }
+
+            Label {
+                id: labelTooManyReq
+                x: 153
+                y: 310
+                font.pointSize: 12
+                font.weight: Font.Normal
+                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenterOffset: 100
+                anchors.horizontalCenterOffset: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }

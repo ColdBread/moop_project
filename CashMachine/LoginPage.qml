@@ -15,7 +15,8 @@ LoginPageForm {
                 swipeView.currentIndex = 2
             }
             onSendTooManyReqLogin: {
-
+                labelTooManyReq.text = "Too Many Tries please wait 5 minutes";
+                labelTooManyReq.color = "#FF0000";
             }
 
         }
@@ -25,8 +26,8 @@ LoginPageForm {
         console.log("Button Pressed Login");
         if(checkInputs (phoneField.text, passwordField.text)) {
 
-            appCore.receiveLogin(phoneField.text, passwordField.text)
-
+            appCore.receiveLogin(phoneField.text, passwordField.text);
+            labelTooManyReq.text = "";
 
         }
 

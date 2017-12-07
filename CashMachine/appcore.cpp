@@ -76,6 +76,7 @@ void AppCore::replyFinishedLogin(QNetworkReply* reply){
             double token = data["timeoutMinutes"].toDouble();
             qDebug() << token;
             //read http body please*/
+
             reply->deleteLater();
 
             emit sendTooManyReqLogin();
@@ -448,6 +449,7 @@ void AppCore::replyFinishedLoadAccSettings(QNetworkReply *reply){
         QJsonDocument body = QJsonDocument::fromJson(str.toUtf8());
         QJsonArray data = body.array();
         emit sendSettingsRefreshAccInfo();
+        emit sendSetAccId(res);
         for(QJsonValue val : data) {
             int id = val.toObject()["id"].toInt();
             int destination = val.toObject()["destinationAccount"].toInt();
@@ -459,12 +461,14 @@ void AppCore::replyFinishedLoadAccSettings(QNetworkReply *reply){
             qDebug() << intervaL;
             QString interval = QString::number(intervaL);
             QString lastPay = val.toObject()["timeLastTransaction"].toString();
+            qDebug() << "Last payment";
+            qDebug() << lastPay;
             QString lastPayment = lastPay.left(16);
             AutoTrans trans(0,id,res.toInt(),destination);
             session->addAutoTrans(trans);
             emit sendSettingsUpdateAccInfo(id, destination, amount, interval, lastPayment);
         }
-        emit sendSetAccId(res);
+
         reply->deleteLater();
         } else if(status == 401) {
             reply->deleteLater();
