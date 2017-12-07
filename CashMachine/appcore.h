@@ -18,6 +18,7 @@ signals:
     void sendGetStarted();
     void sendLogin();
     void sendTooManyReqLogin();
+    void sendFailedToLogin();
     void sendVerification();
     void sendVerificationBad();
     void sendAccounts();
@@ -55,7 +56,7 @@ public slots:
     void receiveUpdateCombo();
     void receiveTrans(QString id_first, QString id_second, QString amount);
     void receiveRegularTrans(QString id_first, QString id_second, QString amount, QString interval);
-    void receiveLoadAccSettings(QString id_acc);
+    void receiveLoadAccAutoSettings(QString id_acc);
     void receiveLoadAccHistory(QString id_acc);
     void receiveDeleteAuto(QString id_trans);
     void receiveChangeLimit(QString id_acc, QString limit);
@@ -77,7 +78,7 @@ private slots:
     void replyFinishedDeleteAcc(QNetworkReply *reply);
     void replyFinishedTrans(QNetworkReply *reply);
     void replyFinishedRegularTrans(QNetworkReply *reply);
-    void replyFinishedLoadAccSettings(QNetworkReply *reply);
+    void replyFinishedLoadAccAutoSettings(QNetworkReply *reply);
     void replyFinishedLoadAccHistory(QNetworkReply *reply);
     void replyFinishedChangeLimit(QNetworkReply * reply);
     void replyFinishedDeleteAuto(QNetworkReply *reply);

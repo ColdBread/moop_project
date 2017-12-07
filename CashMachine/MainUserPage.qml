@@ -13,7 +13,7 @@ MainUserPageForm {
             listModel.clear();
         }
         onSendMainUpdateAccAuto: {
-            appCore.receiveLoadAccSettings(id);
+            appCore.receiveLoadAccAutoSettings(id);
         }
     }
     Item {
@@ -168,7 +168,7 @@ MainUserPageForm {
 
                             onClicked: {
                                 console.log(label3.text);
-                                appCore.receiveLoadAccSettings(label3.text);
+                                appCore.receiveLoadAccAutoSettings(label3.text);
                                 appCore.receiveLoadAccHistory(label3.text);
                                 swipeView.currentIndex = 6;
                             }

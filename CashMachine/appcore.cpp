@@ -82,12 +82,13 @@ void AppCore::replyFinishedLogin(QNetworkReply* reply){
             emit sendTooManyReqLogin();
         } else if (status == 400) {
             qDebug() << "Bad Request"+status;
+            emit sendFailedToLogin();
             reply->deleteLater();
 
         } else {
             qDebug() << "HTTP request failed"+status;
             reply->deleteLater();
-
+            emit sendFailedToLogin();
         }
 
    // qDebug() << "UHUUUU";
@@ -417,7 +418,7 @@ void AppCore::replyFinishedRegularTrans(QNetworkReply *reply){
     }
 }
 
-void AppCore:: receiveLoadAccSettings(QString id_acc){
+void AppCore:: receiveLoadAccAutoSettings(QString id_acc){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
     QString url = "http://18.216.40.33:8888/transactions/automatic?account="+id_acc +"&token="+token;
@@ -425,12 +426,12 @@ void AppCore:: receiveLoadAccSettings(QString id_acc){
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QNetworkReply* reply = manager->sendCustomRequest(request,"GET");
-    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedLoadAccSettings(QNetworkReply*)), Qt::DirectConnection);
+    bool ok = connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinishedLoadAccAutoSettings(QNetworkReply*)), Qt::DirectConnection);
     qDebug() << ok;
     session->clearAutoById(id_acc.toInt());
 }
 
-void AppCore::replyFinishedLoadAccSettings(QNetworkReply *reply){
+void AppCore::replyFinishedLoadAccAutoSettings(QNetworkReply *reply){
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     QString idRofl = reply->url().toString();
     QString res = "";

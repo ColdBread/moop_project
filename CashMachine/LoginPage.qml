@@ -18,6 +18,10 @@ LoginPageForm {
                 labelTooManyReq.text = "Too Many Tries please wait 5 minutes";
                 labelTooManyReq.color = "#FF0000";
             }
+            onSendFailedToLogin: {
+                labelTooManyReq.text = "Failed To Login";
+                labelTooManyReq.color = "#FF0000";
+            }
 
         }
 
