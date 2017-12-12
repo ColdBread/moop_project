@@ -16,7 +16,7 @@ Account& Account::operator=(const Account& acc){
     this->_id = acc._id;
     this->_amount = acc._amount;
     this->_credit_limit = acc._credit_limit;
-
+    return *this;
 }
 
 

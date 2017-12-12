@@ -523,7 +523,7 @@ void AppCore::replyFinishedLoadAccHistory(QNetworkReply *reply){
 void AppCore::receiveDeleteAuto(QString id_trans){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions/automatic/"+id_trans +"&token="+token;
+    QString url = "http://18.216.40.33:8888/transactions/automatic/"+id_trans +"?token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -560,10 +560,9 @@ void AppCore::replyFinishedDeleteAuto(QNetworkReply *reply){
             QString interval = val.toObject()["intervalDays"].toString();
             QString lastPay = val.toObject()["timeLastTransaction"].toString();
             QString lastPayment = lastPay.left(16);
-            AutoTrans trans(0,id,res.toInt(),destination);
-            session->addAutoTrans(trans);
             emit sendSettingsUpdateAccInfo(id, destination, amount, interval, lastPayment);
         }
+
         emit sendAccounts();
         reply->deleteLater();
         } else if(status == 401) {

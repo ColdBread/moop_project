@@ -16,6 +16,7 @@ AutoTrans& AutoTrans:: operator=(const AutoTrans& trans){
     this->_id = trans._id;
     this->_from = trans._from;
     this->_to = trans._to;
+    return *this;
 }
 
 int AutoTrans:: getId() {
