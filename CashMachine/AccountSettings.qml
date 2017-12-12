@@ -248,6 +248,9 @@ AccountSettingsForm {
             anchors.horizontalCenterOffset: -414
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
+            validator: RegExpValidator {
+                regExp: /^[0-9]+$/
+            }
         }
 
         Button {

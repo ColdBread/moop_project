@@ -29,6 +29,10 @@ LoginPageForm {
     loginButton.onClicked: {
         console.log("Button Pressed Login");
         if(checkInputs (phoneField.text, passwordField.text)) {
+            phoneNumberLabel.text = "Phone Number";
+            phoneNumberLabel.color = "#000000";
+            passwordLabel.text = "Password";
+            passwordLabel.color = "#000000";
 
             appCore.receiveLogin(phoneField.text, passwordField.text);
             labelTooManyReq.text = "";
