@@ -1,2 +1,2 @@
 # moop_project
-Just import to the latest version of qt and run it.
+Just import to the qt 5.9.2 and run it.
