@@ -71,12 +71,12 @@ LoginPageForm {
             }
 
             function changePhoneLabel() {
-                phoneNumberLabel.text = "Phone Number (your input is invalid)";
+                phoneNumberLabel.text = "Phone Number your input is invalid";
                 phoneNumberLabel.color = "#FF0000";
             }
 
             function changePasswordLabel() {
-                passwordLabel.text = "Password (At least 1 letter and 1 number)";
+                passwordLabel.text = "Password At least 1 letter and 1 number. \n Only English Letters";
                 passwordLabel.color = "#FF0000";
             }
 

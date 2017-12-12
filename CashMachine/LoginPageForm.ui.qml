@@ -39,6 +39,7 @@ Item {
                 y: 43
                 width: 260
                 height: 41
+                text: qsTr("+")
                 anchors.verticalCenterOffset: -147
                 anchors.horizontalCenterOffset: 0
                 anchors.verticalCenter: parent.verticalCenter
