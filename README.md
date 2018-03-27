@@ -8,12 +8,12 @@ Also user can:
 -perform request of changing credit limit
 -view transactions history of every his account
 -view/delete automated transactions for every account
----
+***
 To become a member of this system send me a message to my e-mail.
----
+***
 To watch tests go via this [link](https://docs.google.com/presentation/d/1BASkodM9segI28g-iI9kAxr4Bdx6i_3OwgIYqm8ETYY/edit?usp=sharing)</br>
 Server side for this project is [here](https://github.com/ColdBread/kursova-serv)
----
+***
 ## How to run my project ##
 Just import to the qt 5.9.2 and run it. </br>
 Information about other qt versions is not confirmed.  
