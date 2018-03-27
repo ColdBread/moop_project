@@ -33,7 +33,7 @@ TransactionsForm {
             label3.color = "#FF0000";
         }
         onSendThereIsAlreadyAutoTrans: {
-            label3.text = "Auto transaction between this too already created";
+            label3.text = "Auto transaction between this two already created";
             label3.color = "#FF0000";
         }
         onSendUnexpectedException: {

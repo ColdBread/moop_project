@@ -61,6 +61,7 @@ public slots:
     void receiveDeleteAuto(QString id_trans);
     void receiveChangeLimit(QString id_acc, QString limit);
     void tests();
+    void finishedTransferRegular();
 
 private:
    // int count;

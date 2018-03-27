@@ -16,28 +16,6 @@ Item {
     Background {
         id: background
         anchors.fill: parent
-
-        Label {
-            id: label2
-            x: 734
-            y: 472
-            width: 42
-            height: 28
-            text: qsTr("Days")
-            font.pointSize: 14
-        }
-
-        /* ComboBox {
-            id: comboBox
-            x: 504
-            width: 273
-            height: 40
-            anchors.top: parent.top
-            anchors.topMargin: 262
-            anchors.horizontalCenter: parent.horizontalCenter
-            currentIndex: 0
-            model: ["Account 1", "Account 2", "Account 3"]
-        }*/
     }
 
     ComboBox {

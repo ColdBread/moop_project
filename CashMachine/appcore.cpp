@@ -8,6 +8,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <chrono>
+#include <QTimer>
 
 
 AppCore::AppCore(QObject *parent) : QObject(parent)
@@ -37,9 +39,9 @@ void AppCore::tests()
 void AppCore::receiveLogin(QString phone, QString pass)
 {
     manager = new QNetworkAccessManager(this);
-
-    QString url = "http://18.216.40.33:8888/auth/send-sms?phone="+phone+"&password="+pass;
-    //QString url = "http://18.216.40.33:8888/auth/send-sms?phone=+380504404809&password=zzzz1234";
+    //myServer = 18.188.130.74
+    QString url = "http://18.188.130.74:8888/auth/send-sms?phone="+phone+"&password="+pass;
+    //QString url = "http://18.188.130.74:8888/auth/send-sms?phone=+380504404809&password=zzzz1234";
 
     qDebug() << url;
     QNetworkRequest request(url);
@@ -98,7 +100,7 @@ void AppCore::replyFinishedLogin(QNetworkReply* reply){
 
 void AppCore::receiveVerification(QString code) {
     manager = new QNetworkAccessManager(this);
-    QString url = "http://18.216.40.33:8888/auth/verify-sms?phone="+session->getPhone()+"&code="+code;
+    QString url = "http://18.188.130.74:8888/auth/verify-sms?phone="+session->getPhone()+"&code="+code;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -146,7 +148,7 @@ void AppCore:: replyFinishedVerification(QNetworkReply* reply){
 void AppCore::receiveAccounts() {
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/accounts?token="+token;
+    QString url = "http://18.188.130.74:8888/accounts?token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -220,7 +222,7 @@ void AppCore::receiveEditAccounts() {
 void AppCore::receiveAddAcc(){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/accounts?token="+token;
+    QString url = "http://18.188.130.74:8888/accounts?token="+token;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QNetworkReply* reply = manager->sendCustomRequest(request,"PUT");
@@ -260,7 +262,7 @@ void AppCore::replyFinishedAddAcc(QNetworkReply *reply){
 void AppCore::receiveDeleteAcc(QString id){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/accounts/"+id +"?token="+token;
+    QString url = "http://18.188.130.74:8888/accounts/"+id +"?token="+token;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QNetworkReply* reply = manager->sendCustomRequest(request,"DELETE");
@@ -337,7 +339,7 @@ void AppCore::receiveTrans(QString id_first, QString id_second, QString amount){
     }
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions/"+id_first +"/" + id_second +"?amount="+amount +"&token="+token;
+    QString url = "http://18.188.130.74:8888/transactions/"+id_first +"/" + id_second +"?amount="+amount +"&token="+token;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QNetworkReply* reply = manager->sendCustomRequest(request,"POST");
@@ -390,7 +392,7 @@ void AppCore:: receiveRegularTrans(QString id_first, QString id_second, QString 
     }
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions/automatic/"+id_first +"/" + id_second +"?amount="+amount +"&intervalDays="+interval +"&token="+token;
+    QString url = "http://18.188.130.74:8888/transactions/automatic/"+id_first +"/" + id_second +"?amount="+amount +"&intervalDays="+interval +"&token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -402,11 +404,12 @@ void AppCore:: receiveRegularTrans(QString id_first, QString id_second, QString 
 void AppCore::replyFinishedRegularTrans(QNetworkReply *reply){
     QVariant status_code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     qint32 status = status_code.toInt();
-    qDebug() << "sttus= " + status;
+    qDebug() << "status= " + status;
     if(status == 200) {
         QByteArray bytes = reply->readAll();
         qDebug() << bytes;
-        emit sendFinishedTransfer();
+        emit sendAccounts();
+        QTimer::singleShot(60000, this, SLOT(finishedTransferRegular()));
         reply->deleteLater();
 
     } else if(status == 401) {
@@ -418,10 +421,14 @@ void AppCore::replyFinishedRegularTrans(QNetworkReply *reply){
     }
 }
 
+void AppCore::finishedTransferRegular(){
+    emit sendFinishedTransfer();
+}
+
 void AppCore:: receiveLoadAccAutoSettings(QString id_acc){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions/automatic?account="+id_acc +"&token="+token;
+    QString url = "http://18.188.130.74:8888/transactions/automatic?account="+id_acc +"&token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -482,7 +489,7 @@ void AppCore::replyFinishedLoadAccAutoSettings(QNetworkReply *reply){
 void AppCore:: receiveLoadAccHistory(QString id_acc){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions?account="+id_acc +"&token="+token;
+    QString url = "http://18.188.130.74:8888/transactions?account="+id_acc +"&token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -523,7 +530,7 @@ void AppCore::replyFinishedLoadAccHistory(QNetworkReply *reply){
 void AppCore::receiveDeleteAuto(QString id_trans){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/transactions/automatic/"+id_trans +"?token="+token;
+    QString url = "http://18.188.130.74:8888/transactions/automatic/"+id_trans +"?token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -576,7 +583,7 @@ void AppCore::replyFinishedDeleteAuto(QNetworkReply *reply){
 void AppCore::receiveChangeLimit(QString id_acc,QString limit){
     manager = new QNetworkAccessManager(this);
     QString token = session->getToken();
-    QString url = "http://18.216.40.33:8888/accounts/"+id_acc+"/credit-limit/"+limit +"?token="+token;
+    QString url = "http://18.188.130.74:8888/accounts/"+id_acc+"/credit-limit/"+limit +"?token="+token;
     qDebug() << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");

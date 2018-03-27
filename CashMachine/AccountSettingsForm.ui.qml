@@ -16,18 +16,6 @@ Item {
         anchors.fill: parent
     }
 
-    Pane {
-        id: pane1
-        x: 1038
-        y: 290
-        width: 294
-        height: 352
-        anchors.verticalCenterOffset: 0
-        anchors.horizontalCenterOffset: 433
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-    }
-
     Label {
         id: labelLimit
         x: 144
@@ -50,18 +38,6 @@ Item {
         anchors.horizontalCenterOffset: 1
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-    }
-
-    Label {
-        id: label1
-        x: 940
-        y: 157
-        text: qsTr("Manage Your Auto Transactions")
-        anchors.verticalCenterOffset: -221
-        anchors.horizontalCenterOffset: 434
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        font.pointSize: 14
     }
 
     TextField {
@@ -98,15 +74,5 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         highlighted: true
-    }
-
-    Pane {
-        id: pane
-        x: 487
-        y: 214
-        width: 306
-        height: 352
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
     }
 }
