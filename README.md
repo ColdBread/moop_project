@@ -1,4 +1,4 @@
-## My 3rd course project in NaUKMA.##
+# My 3rd course project in NaUKMA. #
 My course project is client side developped using C++ framework Qt5.9.2, for custom E-banking system.
 Every user of this system can create/delete payment accounts related to his user account.
 Also user can:
