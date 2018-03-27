@@ -1,13 +1,13 @@
 # My 3rd course project in NaUKMA #
-My course project is client side developped using C++ framework Qt5.9.2, for custom E-banking system.
-Every user of this system can create/delete payment accounts related to his user account.
-Also user can:
--perform transactions to any payment account in system from own accounts
--perform same transactions which will be repeated automatically every set days
--check balance on his payment accounts
--perform request of changing credit limit
--view transactions history of every his account
--view/delete automated transactions for every account
+My course project is client side developped using C++ framework Qt5.9.2, for custom E-banking system. </br>
+Every user of this system can create/delete payment accounts related to his user account. </br>
+Also user can: </br>
+- perform transactions to any payment account in system from own accounts
+- perform same transactions which will be repeated automatically every set days
+- check balance on his payment accounts
+- perform request of changing credit limit
+- view transactions history of every his account
+- view/delete automated transactions for every account
 ***
 To become a member of this system send me a message to my e-mail.
 ***
