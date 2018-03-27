@@ -1,4 +1,4 @@
-# My 3rd course project in NaUKMA. #
+# My 3rd course project in NaUKMA #
 My course project is client side developped using C++ framework Qt5.9.2, for custom E-banking system.
 Every user of this system can create/delete payment accounts related to his user account.
 Also user can:
@@ -15,5 +15,5 @@ To watch tests go via this [link](https://docs.google.com/presentation/d/1BASkod
 Server side for this project is [here](https://github.com/ColdBread/kursova-serv)
 ---
 ## How to run my project ##
-Just import to the qt 5.9.2 and run it. 
+Just import to the qt 5.9.2 and run it. </br>
 Information about other qt versions is not confirmed.  
